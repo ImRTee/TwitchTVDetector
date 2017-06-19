@@ -23,6 +23,7 @@ module1.factory('TwitchAPI',function($http){
 
 
 module1.controller('streamersController', function ($scope,TwitchAPI){
+    //Declaring scope objects
     $scope.streamers =
         [
             {
@@ -61,32 +62,37 @@ module1.controller('streamersController', function ($scope,TwitchAPI){
                 thumbnail: 'http://www.freeiconspng.com/uploads/load-icon-png-8.png'
             },
             {
-                name: "fadskjfkas",
+                name: "comster404",
                 thumbnail: 'http://www.freeiconspng.com/uploads/load-icon-png-8.png'
             }
 
         ];
 
-    $scope.sortField = 'ALl';
     $scope.searchTitle = "All";
-    function update(){
-    $scope.streamers.forEach(function(user) {
+    $scope.errorMessage = '';
 
+
+
+//Function that does requesting data from the server
+    function update(){
+        $scope.streamers.forEach(function(user) {
         TwitchAPI.getChannel(user.name).success(function (response) {
             if (response.hasOwnProperty('error')){
                 user.bio = response.message;
-                $(`.${user.name}`).popover({trigger: "hover", placement:"bottom"});
+                $(`.${user.name}`).popover({trigger: "hover", placement:"top"});
                 user.thumbnail = 'https://cdn3.iconfinder.com/data/icons/toolbar-people/512/user_error_man_male_profile_warning-512.png';
             } else{
                 if (response.logo === null){
                     user.thumbnail = 'http://stock.wikimini.org/w/images/9/95/Gnome-stock_person-avatar-profile.png';
                     user.bio = 'The streamer needs to be online to show the bio';
-                    $(`.${user.name}`).popover({trigger: "hover", placement:"top"});
+                    $(user.name).popover({trigger: "hover", placement:"top"});
                 }else {
                     user.thumbnail = response.logo;
                 }
                 user.link = response.url;
             }
+        }).error(function(response){
+            alert(response.message);
         });
 
         TwitchAPI.getStatus(user.name).success(function (response) {
@@ -118,40 +124,72 @@ module1.controller('streamersController', function ($scope,TwitchAPI){
 
     };
 
-    update();
-
-
+    //Function that is triggerd when the add button is clicked
     $scope.addNewStreamers= function(){
-        let userNotAdded = true;
-        for (var i = 0; i < $scope.streamers.length; i++){
-            if ( $scope.newStreamerName.toLowerCase() === $scope.streamers[i].name.toLowerCase() ){
-                userNotAdded = false;
-                break;
+
+
+        //Check if there is any spance in the input
+        if ($scope.newStreamerName === undefined || $scope.newStreamerName.search(/\s/g) !== -1 ) {
+            $('.modal-background-noti').css('display','block');
+            $scope.errorMessage = 'Username should not contain any space';
+        } else {
+
+            //Check if the user is already added
+            let userNotAdded = true;
+            for (var i = 0; i < $scope.streamers.length; i++) {
+                if ($scope.newStreamerName.toLowerCase() === $scope.streamers[i].name.toLowerCase()) {
+                    userNotAdded = false;
+                    break;
+                }
+            }
+            if (userNotAdded) {
+                var name = $scope.newStreamerName;
+                $scope.streamers.push({
+                    name: $scope.newStreamerName,
+                    thumbnail: 'http://www.freeiconspng.com/uploads/load-icon-png-8.png',
+                });
+                setTimeout(function () {
+                    $(`.${name}`).addClass('tada');
+                    var height = window.innerHeight + 200;
+                    window.scrollBy(0, height);
+                }, 200);
+                //Empty the input
+                $scope.newStreamerName = '';
+
+                $('.modal-background').css('display', 'none');
+                update();
+            } else {
+                $('.modal-background-noti').css('display', 'block');
+                $scope.errorMessage = 'This user has been already added';
             }
         }
-        if (userNotAdded) {
-            $scope.streamers.push({
-                name: $scope.newStreamerName,
-                thumbnail: 'http://www.freeiconspng.com/uploads/load-icon-png-8.png',
-            });
-            $scope.newStreamerName = '';
-            $('.modal-background').css('display', 'none');
-            update();
-        } else {
-            $('.modal-background-noti').css('display','block');
-        }
+
+
+
+
     };
+
+
     $scope.removeName = function(name){
-        var i = $scope.streamers.indexOf(name);
-        $scope.streamers.splice(i,1);
-        $('div.popover').css('visibility','hidden');
+        $(`.${name.name}`).addClass('bounceOutRight');
+        $(`.streamers-display`).css('background-color','black');
+        $(`.${name.name}`).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+            var i = $scope.streamers.indexOf(name);
+            $scope.streamers.splice(i,1);
+            $('div.popover').css('visibility','hidden');
+            $(`.streamers-display`).css('background-color','purple');
+            update();
+        });
+
+
+
     };
+
     $scope.closeNoti = function(){
-        console.log('dssdf');
         $('.modal-background-noti').css('display','none');
     };
 
-
+    update();
 
 });
 
