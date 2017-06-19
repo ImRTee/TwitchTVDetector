@@ -1,0 +1,93 @@
+
+@media screen and (max-width: 575px){
+    .banner{
+        margin-bottom: 10px;
+        font-size: 0.8em;
+    }
+    #searchInput{
+        margin-top: 1px;
+        height: 30px;
+        border-radius: 5px;
+        font-size: 1.4rem;
+        margin-right: 8px;
+    }
+    .streamers-display{
+        margin-top: 25px;
+        font-size: 1.6rem;
+    }
+    #addButton{
+        font-size: 2.4em;
+    }
+    #searchInput{
+        width: 70%;
+    }
+    .dropdown{
+        width: 30%;
+    }
+    .modal-content, .modal-content-noti,.instruction-content{
+        margin: 30% auto; /* 15% from the top and centered */
+    }
+}
+
+@media screen and (min-width: 575px) {
+.banner {
+    margin-bottom: 20px;
+    padding: 25px 0 25px 60px;
+
+    font-size: 1.2em;
+}
+
+    .filter{
+        padding-left: 40px;
+    }
+    .dropdown-toggle{
+        margin-left: 20px;
+    }
+    #addButton {
+        text-align: right;
+        padding-right: 33px;
+        font-size: 2.8em;
+    }
+    #searchInput{
+        height: 40px;
+        font-size: 2em;
+        width: 60%;
+    }
+    .dropdown{
+        width:20%;
+    }
+    .dropdown-toggle{
+        font-size: 2em;
+    }
+
+    .streamers-display{
+        margin-top: 20px;
+    }
+    .streamer{
+        padding: 15px 0 15px 15px;
+        border-bottom: 4px solid black;
+        font-size: 2em;
+        margin-top: 4px;
+    }
+
+    .modal-content,.modal-content-noti,.instruction-content {
+        margin: 15% auto; /* 15% from the top and centered */
+    }
+}
+
+
+
+@media screen and (min-width:1024px){
+    .filter{
+        padding-left: 120px;
+    }
+    .streamers-display{
+        width:90%;
+        margin: 40px auto 0;
+    }
+}
+
+
+
+
+
